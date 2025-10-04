@@ -42,17 +42,6 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
   const handlePurchase = async () => {
     if (!event) return;
 
-    // Validate quantity
-    if (quantity > 10) {
-      toast.error("Můžete koupit maximálně 10 lístků najednou");
-      return;
-    }
-
-    if (quantity < 1) {
-      toast.error("Musíte koupit alespoň 1 lístek");
-      return;
-    }
-
     const success = await onPurchase(event.id, quantity);
     if (success) {
       // Close dialog immediately, toast will be shown by parent component

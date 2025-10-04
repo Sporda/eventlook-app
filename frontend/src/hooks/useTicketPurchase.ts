@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Ticket } from "../types";
 import { logger } from "../utils/logger";
 
@@ -22,6 +22,7 @@ export const useTicketPurchase = () => {
   const [purchasedTickets, setPurchasedTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const purchaseTickets = async (
     request: PurchaseTicketsRequest
@@ -30,12 +31,21 @@ export const useTicketPurchase = () => {
       setLoading(true);
       setError(null);
 
+      // Cancel previous request if exists
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Create new abort controller
+      abortControllerRef.current = new AbortController();
+
       const response = await fetch(`${API_BASE_URL}/tickets/purchase`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(request),
+        signal: abortControllerRef.current.signal,
       });
 
       if (!response.ok) {
@@ -70,6 +80,15 @@ export const useTicketPurchase = () => {
   const clearTickets = () => {
     setPurchasedTickets([]);
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   return {
     purchasedTickets,

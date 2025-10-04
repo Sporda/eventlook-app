@@ -22,11 +22,11 @@ export class LoggerService implements NestLoggerService {
           ),
         }),
         new winston.transports.File({
-          filename: 'logs/error.log',
+          filename: process.env.LOG_ERROR_FILE || 'logs/error.log',
           level: 'error',
         }),
         new winston.transports.File({
-          filename: 'logs/combined.log',
+          filename: process.env.LOG_COMBINED_FILE || 'logs/combined.log',
         }),
       ],
     });

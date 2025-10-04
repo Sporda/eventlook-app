@@ -103,7 +103,8 @@ export class TicketsService {
     const random = Math.floor(Math.random() * 1000)
       .toString()
       .padStart(3, '0');
-    return `ORD-${timestamp}-${random}`;
+    const uuid = Math.random().toString(36).substring(2, 8);
+    return `ORD-${timestamp}-${random}-${uuid}`;
   }
 
   private generateTicketNumber(): string {
@@ -111,6 +112,7 @@ export class TicketsService {
     const random = Math.floor(Math.random() * 10000)
       .toString()
       .padStart(4, '0');
-    return `TKT-${timestamp}-${random}`;
+    const uuid = Math.random().toString(36).substring(2, 8);
+    return `TKT-${timestamp}-${random}-${uuid}`;
   }
 }

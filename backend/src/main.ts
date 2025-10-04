@@ -5,7 +5,7 @@ import { LoggerService } from './services/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const logger = new LoggerService();
+  const logger = app.get(LoggerService);
 
   // Enable CORS
   app.enableCors({
