@@ -47,8 +47,12 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
     }
   };
 
-  const isSoldOut = event ? event.tickets.length >= event.ticketCount : false;
-  const maxQuantity = event ? event.ticketCount - event.tickets.length : 1;
+  const isSoldOut = event
+    ? (event.tickets?.length || 0) >= event.ticketCount
+    : false;
+  const maxQuantity = event
+    ? event.ticketCount - (event.tickets?.length || 0)
+    : 1;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

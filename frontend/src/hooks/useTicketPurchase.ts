@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Ticket } from "../types";
+import { logger } from "../utils/logger";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 
@@ -46,12 +47,20 @@ export const useTicketPurchase = () => {
 
       const data: PurchaseTicketsResponse = await response.json();
       setPurchasedTickets((prev) => [...prev, ...data.tickets]);
+      logger.info(
+        `Successfully purchased ${data.tickets.length} tickets for event ${request.eventId}`,
+        "useTicketPurchase"
+      );
       return true;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Purchase failed";
       setError(errorMessage);
-      console.error("Error purchasing tickets:", err);
+      logger.error(
+        "Error purchasing tickets:",
+        err instanceof Error ? err.stack : undefined,
+        "useTicketPurchase"
+      );
       return false;
     } finally {
       setLoading(false);

@@ -10,6 +10,7 @@ import { Ticket } from '../entities/ticket.entity';
 import { Order } from '../entities/order.entity';
 import { PurchaseTicketsDto } from '../dto/purchase-tickets.dto';
 import { PurchaseResponseDto } from '../dto/purchase-response.dto';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class TicketsService {
@@ -21,12 +22,18 @@ export class TicketsService {
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
     private dataSource: DataSource,
+    private logger: LoggerService,
   ) {}
 
   async purchaseTickets(
     purchaseDto: PurchaseTicketsDto,
   ): Promise<PurchaseResponseDto> {
     const { eventId, quantity } = purchaseDto;
+
+    this.logger.log(
+      `Starting ticket purchase for event ${eventId}, quantity: ${quantity}`,
+      'TicketsService',
+    );
 
     // Use transaction for data consistency
     return await this.dataSource.transaction(async (manager) => {

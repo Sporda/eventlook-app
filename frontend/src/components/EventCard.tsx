@@ -8,6 +8,7 @@ import {
   Chip,
 } from "@mui/material";
 import { Event } from "../types";
+import { logger } from "../utils/logger";
 
 interface EventCardProps {
   event: Event;
@@ -20,8 +21,9 @@ export const EventCard: React.FC<EventCardProps> = ({
   onPurchase,
   isSoldOut,
 }) => {
-  const availableTickets = event.ticketCount - event.tickets.length;
-  const soldPercentage = (event.tickets.length / event.ticketCount) * 100;
+  const availableTickets = event.ticketCount - (event.tickets?.length || 0);
+  const soldPercentage =
+    ((event.tickets?.length || 0) / event.ticketCount) * 100;
 
   return (
     <Card
@@ -63,7 +65,7 @@ export const EventCard: React.FC<EventCardProps> = ({
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
             <Typography variant="body2" color="text.secondary">
-              {event.tickets.length} / {event.ticketCount} prodáno
+              {event.tickets?.length || 0} / {event.ticketCount} prodáno
             </Typography>
             <Chip
               label={`${availableTickets} dostupných`}
@@ -101,11 +103,17 @@ export const EventCard: React.FC<EventCardProps> = ({
             variant="contained"
             color="primary"
             fullWidth
-            onClick={() => onPurchase(event)}
+            onClick={() => {
+              logger.info(
+                `User clicked purchase button for event: ${event.name}`,
+                "EventCard"
+              );
+              onPurchase(event);
+            }}
             disabled={isSoldOut}
             sx={{ mt: "auto" }}
           >
-            {isSoldOut ? "Vypredáno" : "Koupit lístky"}
+            {isSoldOut ? "Vyprodáno" : "Koupit lístky"}
           </Button>
         </Box>
       </CardContent>

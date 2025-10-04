@@ -1,6 +1,9 @@
 import { Client } from 'pg';
+import { LoggerService } from './services/logger.service';
 
 export async function seedDatabase() {
+  const logger = new LoggerService();
+
   const client = new Client({
     host: process.env.DB_HOST || 'postgres',
     port: parseInt(process.env.DB_PORT || '5432'),
@@ -29,7 +32,7 @@ export async function seedDatabase() {
     const count = parseInt(result.rows[0].count);
 
     if (count > 0) {
-      console.log('Database already has data, skipping seed...');
+      logger.log('Database already has data, skipping seed...', 'Seeder');
       return;
     }
 
@@ -71,7 +74,7 @@ export async function seedDatabase() {
       );
     }
 
-    console.log('Database seeded successfully!');
+    logger.log('Database seeded successfully!', 'Seeder');
   } finally {
     await client.end();
   }
@@ -85,7 +88,7 @@ if (require.main === module) {
       process.exit(0);
     })
     .catch((error) => {
-      console.error('Error seeding database:', error);
+      console.error('Error seeding database:', error.stack);
       process.exit(1);
     });
 }

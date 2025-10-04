@@ -10,6 +10,7 @@ import { EventsController } from './controllers/events.controller';
 import { TicketsController } from './controllers/tickets.controller';
 import { EventsService } from './services/events.service';
 import { TicketsService } from './services/tickets.service';
+import { LoggerService } from './services/logger.service';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { TicketsService } from './services/tickets.service';
     TypeOrmModule.forFeature([Event, Ticket, Order]),
   ],
   controllers: [AppController, EventsController, TicketsController],
-  providers: [AppService, EventsService, TicketsService],
+  providers: [AppService, EventsService, TicketsService, LoggerService],
 })
 export class AppModule {}

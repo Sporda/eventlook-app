@@ -1,9 +1,29 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import App from "./App";
 
-test('renders learn react link', () => {
+// Mock the hooks
+jest.mock("./hooks/useEvents", () => ({
+  useEvents: () => ({
+    events: [],
+    loading: false,
+    error: null,
+    refetch: jest.fn(),
+  }),
+}));
+
+jest.mock("./hooks/useTicketPurchase", () => ({
+  useTicketPurchase: () => ({
+    purchasedTickets: [],
+    loading: false,
+    error: null,
+    purchaseTickets: jest.fn(),
+    clearTickets: jest.fn(),
+  }),
+}));
+
+test("renders Eventlook title", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const titleElement = screen.getByText(/Eventlook/i);
+  expect(titleElement).toBeInTheDocument();
 });

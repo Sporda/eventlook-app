@@ -12,6 +12,7 @@ import { PurchaseDialog } from "./components/PurchaseDialog";
 import { TicketList } from "./components/TicketList";
 import { useEvents } from "./hooks/useEvents";
 import { useTicketPurchase } from "./hooks/useTicketPurchase";
+import { logger } from "./utils/logger";
 import { Event } from "./types";
 
 function App() {
@@ -41,9 +42,16 @@ function App() {
     eventId: number,
     quantity: number
   ): Promise<boolean> => {
+    logger.info(
+      `Attempting to purchase ${quantity} tickets for event ${eventId}`,
+      "App"
+    );
     const success = await purchaseTickets({ eventId, quantity });
     if (success) {
+      logger.info(`Purchase successful, refreshing events`, "App");
       refetch(); // Refresh events to update sold count
+    } else {
+      logger.warn(`Purchase failed for event ${eventId}`, "App");
     }
     return success;
   };
