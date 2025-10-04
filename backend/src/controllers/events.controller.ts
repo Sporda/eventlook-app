@@ -1,24 +1,13 @@
-import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Controller, Get } from '@nestjs/common';
+import { EventsService } from '../services/events.service';
 import { Event } from '../entities/event.entity';
 
 @Controller('events')
 export class EventsController {
-  constructor(
-    @InjectRepository(Event)
-    private eventRepository: Repository<Event>,
-  ) {}
+  constructor(private readonly eventsService: EventsService) {}
 
   @Get()
   async findAll(): Promise<Event[]> {
-    try {
-      return this.eventRepository.find({
-        order: { startDate: 'ASC' },
-        relations: ['tickets'],
-      });
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch events');
-    }
+    return this.eventsService.findAll();
   }
 }

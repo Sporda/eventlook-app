@@ -5,7 +5,7 @@ export interface Event {
   startDate: string;
   ticketCount: number;
   ticketPrice: number;
-  tickets: Ticket[];
+  tickets?: Ticket[];
 }
 
 export interface Ticket {

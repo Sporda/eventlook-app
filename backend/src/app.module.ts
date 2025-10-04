@@ -8,10 +8,15 @@ import { Order } from './entities/order.entity';
 import { Ticket } from './entities/ticket.entity';
 import { EventsController } from './controllers/events.controller';
 import { TicketsController } from './controllers/tickets.controller';
+import { EventsService } from './services/events.service';
+import { TicketsService } from './services/tickets.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'postgres',
@@ -20,11 +25,12 @@ import { TicketsController } from './controllers/tickets.controller';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_DATABASE || 'eventlook',
       entities: [Event, Ticket, Order],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
+      logging: process.env.NODE_ENV === 'development',
     }),
     TypeOrmModule.forFeature([Event, Ticket, Order]),
   ],
   controllers: [AppController, EventsController, TicketsController],
-  providers: [AppService],
+  providers: [AppService, EventsService, TicketsService],
 })
 export class AppModule {}
