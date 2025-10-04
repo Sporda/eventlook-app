@@ -9,7 +9,7 @@ import {
   Button,
   Box,
   Alert,
-  CircularProgress,
+  Paper,
 } from "@mui/material";
 import { Event } from "../types";
 
@@ -56,82 +56,140 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Koupit lístky</DialogTitle>
-      <DialogContent>
-        {event && (
-          <>
-            <Typography variant="h6" gutterBottom>
-              {event.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              📍 {event.place}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              📅{" "}
-              {new Date(event.startDate).toLocaleDateString("cs-CZ", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </Typography>
-            <Typography variant="h6" color="primary" gutterBottom>
-              {event.ticketPrice.toLocaleString("cs-CZ")} Kč za lístek
-            </Typography>
+      <Box className="purchase-dialog">
+        <DialogTitle
+          className="dialog-title"
+          sx={{
+            color: "primary.main",
+            fontWeight: "bold",
+            backgroundColor: "grey.900",
+            borderBottom: 1,
+            borderColor: "grey.700",
+          }}
+        >
+          Koupit lístky
+        </DialogTitle>
+        <DialogContent sx={{ backgroundColor: "grey.900", color: "white" }}>
+          {event && (
+            <>
+              <Paper
+                className="event-info"
+                sx={{ p: 2, mb: 3, backgroundColor: "grey.800" }}
+              >
+                <Typography
+                  variant="h6"
+                  className="event-name"
+                  sx={{ mb: 1, color: "white" }}
+                >
+                  {event.name}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  className="event-details"
+                  sx={{ mb: 0.5, color: "grey.300" }}
+                >
+                  📍 {event.place}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  className="event-details"
+                  sx={{ mb: 2, color: "grey.300" }}
+                >
+                  📅{" "}
+                  {new Date(event.startDate).toLocaleDateString("cs-CZ", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  className="event-price"
+                  sx={{ color: "primary.main" }}
+                >
+                  {event.ticketPrice.toLocaleString("cs-CZ")} Kč za lístek
+                </Typography>
+              </Paper>
 
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            )}
+              {error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {error}
+                </Alert>
+              )}
 
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Počet lístků"
-              type="number"
-              fullWidth
-              variant="outlined"
-              value={quantity}
-              onChange={(e) =>
-                setQuantity(
-                  Math.max(
-                    1,
-                    Math.min(maxQuantity, parseInt(e.target.value) || 1)
-                  )
-                )
-              }
-              disabled={isSoldOut || loading}
-              inputProps={{
-                min: 1,
-                max: maxQuantity,
-              }}
-              helperText={`Dostupných: ${maxQuantity} lístků`}
-            />
+              <Box className="quantity-input" sx={{ mb: 2 }}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Počet lístků"
+                  type="number"
+                  fullWidth
+                  variant="outlined"
+                  value={quantity}
+                  onChange={(e) =>
+                    setQuantity(
+                      Math.max(
+                        1,
+                        Math.min(maxQuantity, parseInt(e.target.value) || 1)
+                      )
+                    )
+                  }
+                  disabled={isSoldOut || loading}
+                  inputProps={{
+                    min: 1,
+                    max: maxQuantity,
+                  }}
+                  helperText={`Dostupných: ${maxQuantity} lístků`}
+                />
+              </Box>
 
-            {quantity > 1 && (
-              <Box sx={{ mt: 2, p: 2, bgcolor: "grey.50", borderRadius: 1 }}>
-                <Typography variant="body2" color="text.secondary">
+              {quantity > 1 && (
+                <Paper
+                  className="total-price"
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    color: "primary.main",
+                    backgroundColor: "grey.800",
+                  }}
+                >
                   Celková cena:{" "}
                   {(event.ticketPrice * quantity).toLocaleString("cs-CZ")} Kč
-                </Typography>
-              </Box>
-            )}
-          </>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} disabled={loading}>
-          Zrušit
-        </Button>
-        <Button
-          onClick={handlePurchase}
-          variant="contained"
-          disabled={isSoldOut || loading || quantity < 1}
-          startIcon={loading && <CircularProgress size={20} />}
+                </Paper>
+              )}
+            </>
+          )}
+        </DialogContent>
+        <DialogActions
+          className="dialog-actions"
+          sx={{
+            backgroundColor: "grey.900",
+            borderTop: 1,
+            borderColor: "grey.700",
+            justifyContent: "space-between",
+            p: 2,
+          }}
         >
-          {loading ? "Kupuji..." : "Koupit"}
-        </Button>
-      </DialogActions>
+          <Button
+            variant="outlined"
+            className="cancel-button"
+            onClick={onClose}
+            disabled={loading}
+            sx={{ color: "grey.300", borderColor: "grey.600" }}
+          >
+            Zrušit
+          </Button>
+          <Button
+            variant="contained"
+            className="purchase-button"
+            onClick={handlePurchase}
+            disabled={isSoldOut || loading || quantity < 1}
+          >
+            {loading ? "Kupuji..." : "Koupit"}
+          </Button>
+        </DialogActions>
+      </Box>
     </Dialog>
   );
 };

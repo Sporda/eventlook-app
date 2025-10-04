@@ -1,46 +1,28 @@
-import * as winston from "winston";
-
+// Simple console logger for frontend (Winston doesn't work in browser)
 class Logger {
-  private logger: winston.Logger;
-
-  constructor() {
-    this.logger = winston.createLogger({
-      level: process.env.NODE_ENV === "development" ? "debug" : "info",
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.errors({ stack: true }),
-        winston.format.json()
-      ),
-      defaultMeta: { service: "eventlook-frontend" },
-      transports: [
-        new winston.transports.Console({
-          format: winston.format.combine(
-            winston.format.colorize(),
-            winston.format.simple()
-          ),
-        }),
-      ],
-    });
-  }
-
   log(message: string, context?: string) {
-    this.logger.info(message, { context });
+    console.log(`[${context || "App"}] ${message}`);
   }
 
   error(message: string, trace?: string, context?: string) {
-    this.logger.error(message, { trace, context });
+    console.error(
+      `[${context || "App"}] ERROR: ${message}`,
+      trace ? `\n${trace}` : ""
+    );
   }
 
   warn(message: string, context?: string) {
-    this.logger.warn(message, { context });
+    console.warn(`[${context || "App"}] WARN: ${message}`);
   }
 
   debug(message: string, context?: string) {
-    this.logger.debug(message, { context });
+    if (process.env.NODE_ENV !== "production") {
+      console.debug(`[${context || "App"}] DEBUG: ${message}`);
+    }
   }
 
   info(message: string, context?: string) {
-    this.logger.info(message, { context });
+    console.info(`[${context || "App"}] INFO: ${message}`);
   }
 }
 

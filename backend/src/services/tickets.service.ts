@@ -37,10 +37,9 @@ export class TicketsService {
 
     // Use transaction for data consistency
     return await this.dataSource.transaction(async (manager) => {
-      // Find event with pessimistic lock to prevent race conditions
+      // Find event first without relations to avoid LEFT JOIN with FOR UPDATE
       const event = await manager.findOne(Event, {
         where: { id: eventId },
-        relations: ['tickets'],
         lock: { mode: 'pessimistic_write' },
       });
 
@@ -48,8 +47,13 @@ export class TicketsService {
         throw new NotFoundException('Event not found');
       }
 
+      // Get tickets count separately
+      const ticketsCount = await manager.count(Ticket, {
+        where: { event: { id: eventId } },
+      });
+
       // Check ticket availability
-      const soldTickets = event.tickets.length;
+      const soldTickets = ticketsCount;
       const availableTickets = event.ticketCount - soldTickets;
 
       if (quantity > availableTickets) {

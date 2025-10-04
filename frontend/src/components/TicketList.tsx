@@ -6,8 +6,7 @@ import {
   CardContent,
   Button,
   Box,
-  Chip,
-  Divider,
+  Paper,
 } from "@mui/material";
 import { Ticket } from "../types";
 
@@ -25,8 +24,9 @@ export const TicketList: React.FC<TicketListProps> = ({ tickets, onClear }) => {
   );
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <Container className="ticket-list" maxWidth="md" sx={{ mt: 5 }}>
       <Box
+        className="ticket-list-header"
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -34,56 +34,74 @@ export const TicketList: React.FC<TicketListProps> = ({ tickets, onClear }) => {
           mb: 3,
         }}
       >
-        <Typography variant="h4" component="h2">
+        <Typography
+          variant="h4"
+          className="ticket-list-title"
+          sx={{ color: "primary.main", fontWeight: "bold" }}
+        >
           Vaše lístky ({tickets.length})
         </Typography>
         <Button
           variant="outlined"
-          color="secondary"
+          className="clear-button"
           onClick={onClear}
-          size="small"
+          sx={{ color: "grey.300", borderColor: "grey.600" }}
         >
           Vymazat všechny
         </Button>
       </Box>
 
-      <Box sx={{ mb: 3, p: 2, bgcolor: "primary.50", borderRadius: 2 }}>
-        <Typography variant="h6" color="primary">
-          Celková hodnota: {totalValue.toLocaleString("cs-CZ")} Kč
-        </Typography>
-      </Box>
+      <Paper
+        sx={{
+          mb: 3,
+          p: 2,
+          backgroundColor: "grey.800",
+          textAlign: "center",
+          fontWeight: "bold",
+          color: "primary.main",
+        }}
+      >
+        Celková hodnota: {totalValue.toLocaleString("cs-CZ")} Kč
+      </Paper>
 
       {tickets.map((ticket, index) => (
         <Card
           key={`${ticket.id}-${index}`}
-          sx={{ mb: 2, border: "1px solid", borderColor: "grey.200" }}
+          className="ticket-item"
+          sx={{
+            mb: 2,
+            backgroundColor: "grey.800",
+            borderLeft: 5,
+            borderColor: "primary.main",
+          }}
         >
           <CardContent>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                mb: 2,
-              }}
+            <Typography
+              variant="h6"
+              className="ticket-number"
+              sx={{ color: "primary.main", fontWeight: "bold", mb: 1 }}
             >
-              <Typography variant="h6" color="primary">
-                #{ticket.ticketNumber}
-              </Typography>
-              <Chip label="Platný" color="success" size="small" />
-            </Box>
-
-            <Divider sx={{ mb: 2 }} />
-
-            <Typography variant="subtitle1" gutterBottom>
+              #{ticket.ticketNumber}
+            </Typography>
+            <Typography
+              variant="body1"
+              className="ticket-event"
+              sx={{ mb: 0.5, color: "white" }}
+            >
               {ticket.event.name}
             </Typography>
-
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography
+              variant="body2"
+              className="ticket-event"
+              sx={{ mb: 0.5, color: "grey.300" }}
+            >
               📍 {ticket.event.place}
             </Typography>
-
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography
+              variant="body2"
+              className="ticket-event"
+              sx={{ mb: 0.5, color: "grey.300" }}
+            >
               📅{" "}
               {new Date(ticket.event.startDate).toLocaleDateString("cs-CZ", {
                 year: "numeric",
@@ -91,22 +109,14 @@ export const TicketList: React.FC<TicketListProps> = ({ tickets, onClear }) => {
                 day: "numeric",
               })}
             </Typography>
-
-            <Box
-              sx={{
-                mt: 2,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+            <Typography
+              variant="body2"
+              className="ticket-event"
+              sx={{ color: "grey.300" }}
             >
-              <Typography variant="body2" color="text.secondary">
-                Cena: {ticket.event.ticketPrice.toLocaleString("cs-CZ")} Kč
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                ID: {ticket.id}
-              </Typography>
-            </Box>
+              Cena: {ticket.event.ticketPrice.toLocaleString("cs-CZ")} Kč | ID:{" "}
+              {ticket.id}
+            </Typography>
           </CardContent>
         </Card>
       ))}

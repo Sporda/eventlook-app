@@ -1,0 +1,381 @@
+@import "./variables.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background-color: #1a1a1a;
+  color: #f8f9fa;
+  line-height: 1.6;
+}
+
+.eventlook-header {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
+  color: #ffffff;
+  padding: 32px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.eventlook-header .logo {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #ff6b35;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.eventlook-header .subtitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #e9ecef;
+  margin-top: 0;
+}
+
+.event-card {
+  background: #2c3e50;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.event-card .card-image {
+  height: 120px;
+  background: linear-gradient(45deg, #ff6b35, #e55a2b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.event-card .card-content {
+  padding: 24px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card .event-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+.event-card .event-location,
+.event-card .event-date {
+  font-size: 0.95rem;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.event-card .event-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff6b35;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.event-card .ticket-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.event-card .sold-count {
+  font-size: 0.9rem;
+  color: #adb5bd;
+}
+
+.event-card .availability-chip {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #f8f9fa;
+}
+
+.event-card .availability-chip.high {
+  background-color: #28a745;
+}
+
+.event-card .availability-chip.medium {
+  background-color: #ffc107;
+}
+
+.event-card .availability-chip.low {
+  background-color: #dc3545;
+}
+
+.event-card .progress-bar {
+  width: 100%;
+  background-color: #495057;
+  border-radius: 4px;
+  height: 8px;
+  margin-bottom: 24px;
+}
+
+.event-card .progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.event-card .progress-fill.high {
+  background-color: #28a745;
+}
+
+.event-card .progress-fill.medium {
+  background-color: #ffc107;
+}
+
+.event-card .progress-fill.low {
+  background-color: #dc3545;
+}
+
+.event-card .purchase-button {
+  background: linear-gradient(45deg, #ff6b35 30%, #e55a2b 90%);
+  border: none;
+  color: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-top: auto;
+}
+
+.event-card .purchase-button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.event-card .purchase-button:disabled {
+  background: #adb5bd;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.purchase-dialog .dialog-title {
+  color: #ff6b35;
+  font-weight: 700;
+  background-color: #343a40;
+  padding: 16px;
+  border-bottom: 1px solid #495057;
+}
+
+.purchase-dialog .event-info {
+  background-color: #495057;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.purchase-dialog .quantity-input {
+  margin-bottom: 16px;
+}
+
+.purchase-dialog .quantity-input .MuiInputLabel-root,
+.purchase-dialog .quantity-input .MuiInputBase-input,
+.purchase-dialog .quantity-input .MuiFormHelperText-root {
+  color: #f8f9fa !important;
+}
+
+.purchase-dialog .quantity-input .MuiOutlinedInput-notchedOutline {
+  border-color: #adb5bd !important;
+}
+
+.purchase-dialog .quantity-input:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #ff6b35 !important;
+}
+
+.purchase-dialog .quantity-input .Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #ff6b35 !important;
+}
+
+.purchase-dialog .event-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #f8f9fa;
+}
+
+.purchase-dialog .event-details {
+  font-size: 0.9rem;
+  color: #e9ecef;
+  margin-bottom: 4px;
+}
+
+.purchase-dialog .event-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ff6b35;
+  margin-top: 16px;
+}
+
+.purchase-dialog .total-price {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #343a40;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #ff6b35;
+}
+
+.purchase-dialog .dialog-actions {
+  background-color: #343a40;
+  padding: 16px;
+  border-top: 1px solid #495057;
+  justify-content: space-between;
+}
+
+.purchase-dialog .cancel-button {
+  background-color: transparent;
+  border: 1px solid #adb5bd;
+  color: #e9ecef;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.purchase-dialog .cancel-button:hover {
+  background-color: rgba(173, 181, 189, 0.1);
+  border-color: #ff6b35;
+  color: #ff6b35;
+}
+
+.purchase-dialog .purchase-button {
+  background: linear-gradient(45deg, #ff6b35 30%, #e55a2b 90%);
+  border: none;
+  color: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.purchase-dialog .purchase-button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.purchase-dialog .purchase-button:disabled {
+  background: #adb5bd;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.ticket-list {
+  margin-top: 40px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24px;
+  background-color: #2c3e50;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.ticket-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.ticket-list-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ff6b35;
+  margin: 0;
+}
+
+.ticket-list .clear-button {
+  background-color: transparent;
+  border: 1px solid #adb5bd;
+  color: #e9ecef;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ticket-list .clear-button:hover {
+  background-color: rgba(173, 181, 189, 0.1);
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.ticket-item {
+  background-color: #343a40;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #ff6b35;
+}
+
+.ticket-number {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ff6b35;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.ticket-event {
+  font-size: 0.95rem;
+  color: #e9ecef;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 600px) {
+  .eventlook-header {
+    padding: 24px 0;
+  }
+
+  .eventlook-header .logo {
+    font-size: 2.5rem;
+  }
+
+  .eventlook-header .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .ticket-list-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}
