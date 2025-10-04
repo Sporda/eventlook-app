@@ -76,7 +76,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
             <>
               <Paper
                 className="event-info"
-                sx={{ p: 2, mb: 3, backgroundColor: "grey.800" }}
+                sx={{ p: 2, mb: 3, mt: 3, backgroundColor: "grey.800" }}
               >
                 <Typography
                   variant="h6"
