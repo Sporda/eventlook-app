@@ -1,57 +1,91 @@
-import { DataSource } from 'typeorm';
-import { Event } from './entities/event.entity';
+import { Client } from 'pg';
 
 export async function seedDatabase() {
-  const dataSource = new DataSource({
-    type: 'postgres',
-    host: process.env.DB_HOST || 'localhost',
+  const client = new Client({
+    host: process.env.DB_HOST || 'postgres',
     port: parseInt(process.env.DB_PORT || '5432'),
-    username: process.env.DB_USERNAME || 'postgres',
+    user: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
     database: process.env.DB_DATABASE || 'eventlook',
-    entities: [Event],
-    synchronize: true,
   });
 
-  await dataSource.initialize();
+  await client.connect();
 
-  const eventRepository = dataSource.getRepository(Event);
+  try {
+    // Vytvoř tabulku events pokud neexistuje
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS event (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR NOT NULL,
+        place VARCHAR NOT NULL,
+        "startDate" TIMESTAMP NOT NULL,
+        "ticketCount" INTEGER NOT NULL,
+        "ticketPrice" INTEGER NOT NULL
+      )
+    `);
 
-  // Vytvoř testovací eventy
-  const events = [
-    {
-      name: 'Tech Conference 2024',
-      place: 'Prague Convention Centre',
-      startDate: new Date('2024-06-15'),
-      ticketCount: 100,
-      ticketPrice: 299,
-    },
-    {
-      name: 'Music Festival',
-      place: 'Letná Park',
-      startDate: new Date('2024-07-20'),
-      ticketCount: 500,
-      ticketPrice: 150,
-    },
-    {
-      name: 'Art Exhibition',
-      place: 'National Gallery',
-      startDate: new Date('2024-08-10'),
-      ticketCount: 50,
-      ticketPrice: 25,
-    },
-  ];
+    // Zkontroluj, zda už existují data
+    const result = await client.query('SELECT COUNT(*) FROM event');
+    const count = parseInt(result.rows[0].count);
 
-  for (const eventData of events) {
-    const event = eventRepository.create(eventData);
-    await eventRepository.save(event);
+    if (count > 0) {
+      console.log('Database already has data, skipping seed...');
+      return;
+    }
+
+    // Vložit testovací data
+    const events = [
+      {
+        name: 'Tech Conference 2024',
+        place: 'Prague Convention Centre',
+        startDate: '2024-06-15',
+        ticketCount: 100,
+        ticketPrice: 299,
+      },
+      {
+        name: 'Music Festival',
+        place: 'Letná Park',
+        startDate: '2024-07-20',
+        ticketCount: 500,
+        ticketPrice: 150,
+      },
+      {
+        name: 'Art Exhibition',
+        place: 'National Gallery',
+        startDate: '2024-08-10',
+        ticketCount: 50,
+        ticketPrice: 25,
+      },
+    ];
+
+    for (const event of events) {
+      await client.query(
+        'INSERT INTO event (name, place, "startDate", "ticketCount", "ticketPrice") VALUES ($1, $2, $3, $4, $5)',
+        [
+          event.name,
+          event.place,
+          event.startDate,
+          event.ticketCount,
+          event.ticketPrice,
+        ],
+      );
+    }
+
+    console.log('Database seeded successfully!');
+  } finally {
+    await client.end();
   }
-
-  console.log('Database seeded successfully!');
-  await dataSource.destroy();
 }
 
 // Spusť seeder pokud je soubor spuštěn přímo
 if (require.main === module) {
-  seedDatabase().catch(console.error);
+  seedDatabase()
+    .then(() => {
+      console.log('Database seeded successfully!');
+      process.exit(0);
+    })
+    .catch((error) => {
+      console.error('Error seeding database:', error);
+      process.exit(1);
+    });
 }

@@ -57,7 +57,7 @@ function App() {
       }
 
       const data = await response.json();
-      setPurchasedTickets(data.tickets);
+      setPurchasedTickets((prev) => [...prev, ...data.tickets]);
       setOpen(false);
       fetchEvents();
     } catch (error) {
@@ -97,7 +97,8 @@ function App() {
                   {event.name}
                 </Typography>
                 <Typography variant="body2">
-                  {event.place} - {event.startDate.toLocaleDateString()}
+                  {event.place} -{" "}
+                  {new Date(event.startDate).toLocaleDateString()}
                 </Typography>
                 <Typography variant="h6">{event.ticketPrice} Kč</Typography>
                 <Typography variant="body2">
@@ -161,10 +162,18 @@ function App() {
       {purchasedTickets.length > 0 && (
         <Container maxWidth="md" sx={{ mt: 4 }}>
           <Typography variant="h4" gutterBottom>
-            Vaše listky
+            Vaše listky ({purchasedTickets.length})
           </Typography>
-          {purchasedTickets.map((ticket) => (
-            <Card key={ticket.id} sx={{ mb: 2 }}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => setPurchasedTickets([])}
+            sx={{ mb: 2 }}
+          >
+            Vymazat všechny listky
+          </Button>
+          {purchasedTickets.map((ticket, index) => (
+            <Card key={`${ticket.id}-${index}`} sx={{ mb: 2 }}>
               <CardContent>
                 <Typography variant="h6">
                   Listek #{ticket.ticketNumber}
@@ -173,7 +182,10 @@ function App() {
                   {ticket.event.name} - {ticket.event.place}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {ticket.event.startDate.toLocaleDateString()}
+                  {new Date(ticket.event.startDate).toLocaleDateString()}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  Cena: {ticket.event.ticketPrice} Kč
                 </Typography>
               </CardContent>
             </Card>

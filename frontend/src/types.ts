@@ -2,7 +2,7 @@ export interface Event {
   id: number;
   name: string;
   place: string;
-  startDate: Date;
+  startDate: string;
   ticketCount: number;
   ticketPrice: number;
   tickets: Ticket[];
@@ -15,6 +15,7 @@ export interface Ticket {
     id: number;
     name: string;
     place: string;
-    startDate: Date;
+    startDate: string;
+    ticketPrice: number;
   };
 }
