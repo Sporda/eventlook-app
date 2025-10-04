@@ -7,6 +7,8 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { EventCard } from "./components/EventCard";
 import { PurchaseDialog } from "./components/PurchaseDialog";
 import { TicketList } from "./components/TicketList";
@@ -46,12 +48,27 @@ function App() {
       `Attempting to purchase ${quantity} tickets for event ${eventId}`,
       "App"
     );
+
+    // Validate quantity
+    if (quantity > 10) {
+      toast.error("Můžete koupit maximálně 10 lístků najednou");
+      return false;
+    }
+
     const success = await purchaseTickets({ eventId, quantity });
     if (success) {
       logger.info(`Purchase successful, refreshing events`, "App");
-      refetch(); // Refresh events to update sold count
+      // Show success toast after a short delay to ensure it's visible
+      setTimeout(() => {
+        console.log("Showing success toast for", quantity, "tickets");
+        toast.success(`Nakup proběhl úspěšně`);
+      }, 100);
+      // Refresh events to update sold count
+      refetch();
     } else {
       logger.warn(`Purchase failed for event ${eventId}`, "App");
+      console.log("Showing error toast");
+      toast.error("Nákup se nezdařil. Zkuste to prosím znovu.");
     }
     return success;
   };
@@ -128,6 +145,19 @@ function App() {
 
         <TicketList tickets={purchasedTickets} onClear={clearTickets} />
       </Container>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </Box>
   );
 }
