@@ -25,7 +25,7 @@ export const useEvents = () => {
       logger.info(`Successfully fetched ${data.length} events`, "useEvents");
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to fetch events";
+        err instanceof Error ? err.message : "Nepodařilo se načíst události";
       setError(errorMessage);
       logger.error(
         "Error fetching events:",

@@ -70,7 +70,9 @@ describe("useTicketPurchase", () => {
 
     expect(success).toBe(false);
     expect(result.current.purchasedTickets).toEqual([]);
-    expect(result.current.error).toBe("Not enough tickets");
+    expect(result.current.error).toBe(
+      "Není dostatek lístků. Zbývá pouze 0 lístků."
+    );
   });
 
   it("should clear tickets", () => {

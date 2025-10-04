@@ -44,7 +44,7 @@ export class TicketsService {
       });
 
       if (!event) {
-        throw new NotFoundException('Event not found');
+        throw new NotFoundException('Událost nebyla nalezena');
       }
 
       // Get tickets count separately
@@ -58,7 +58,7 @@ export class TicketsService {
 
       if (quantity > availableTickets) {
         throw new BadRequestException(
-          `Not enough tickets available. Only ${availableTickets} tickets remaining.`,
+          `Není dostatek lístků. Zbývá pouze ${availableTickets} lístků.`,
         );
       }
 

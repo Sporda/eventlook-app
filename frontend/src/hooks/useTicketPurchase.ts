@@ -64,7 +64,7 @@ export const useTicketPurchase = () => {
       return true;
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Purchase failed";
+        err instanceof Error ? err.message : "Nákup se nezdařil";
       setError(errorMessage);
       logger.error(
         "Error purchasing tickets:",

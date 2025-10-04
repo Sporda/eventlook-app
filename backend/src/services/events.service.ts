@@ -25,7 +25,11 @@ export class EventsService {
       );
       return events;
     } catch (error) {
-      this.logger.error('Failed to fetch events', error.stack, 'EventsService');
+      this.logger.error(
+        'Nepodařilo se načíst události',
+        error.stack,
+        'EventsService',
+      );
       throw error;
     }
   }
